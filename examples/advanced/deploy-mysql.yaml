@@ -1,0 +1,15 @@
+- name: Install and secure MySQL
+  hosts: dbservers
+  tasks:
+    - name: Install MySQL Server
+      become: true
+      module: shell
+      args:
+        cmd: sudo apt-get install mysql-server -y
+
+    - name: Set root password and secure MySQL
+      become: true
+      module: shell
+      args:
+        cmd: |
+          mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'StrongRootPass!';"

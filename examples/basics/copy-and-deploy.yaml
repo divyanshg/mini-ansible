@@ -1,0 +1,16 @@
+- name: Upload website content
+  tasks:
+    - name: Copy index.html
+      become: true
+      module: copy
+      args:
+        src: ./examples/config/index.html
+        dest: /var/www/html/index.html
+        mode: "0644"
+        owner: root
+        group: root
+
+    - name: Print contents of index.html
+      module: shell
+      args:
+        cmd: cat /var/www/html/index.html

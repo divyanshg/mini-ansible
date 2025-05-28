@@ -1,0 +1,25 @@
+- name: Basic setup and hostname check
+  hosts: all
+  tasks:
+    - name: Print hostname
+      module: shell
+      args:
+        cmd: hostname
+
+    - name: Create a test directory
+      become: true
+      module: shell
+      args:
+        cmd: mkdir -p /opt/test-dir
+
+    - name: Test shell command
+      module: shell
+      args:
+        cmd: "echo 'Testing shell module'"
+        
+    - name: Test apt installation
+      module: apt  
+      args:
+        name: htop
+        state: present
+      become: true

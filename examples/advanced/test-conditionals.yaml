@@ -1,0 +1,42 @@
+- name: Test Variables and Conditionals
+  hosts: all
+  vars:
+    test_var: "hello_world"
+    install_packages: true
+    app_environment: "development"
+    
+  tasks:
+    - name: Print test variable
+      module: shell
+      args:
+        cmd: "echo 'Test variable value: {{ test_var }}'"
+
+    - name: Install packages only if flag is true
+      module: apt
+      args:
+        name: curl
+        state: present
+      when: "install_packages == true"
+
+    - name: Development environment task
+      module: shell
+      args:
+        cmd: "echo 'Running in development mode'"
+      when: "app_environment == 'development'"
+
+    - name: Production environment task
+      module: shell
+      args:
+        cmd: "echo 'Running in production mode'"
+      when: "app_environment == 'production'"
+
+    - name: Skip this task
+      module: shell
+      args:
+        cmd: "echo 'This should be skipped'"
+      when: "false"
+
+    - name: Always run this task
+      module: shell
+      args:
+        cmd: "echo 'This always runs'"

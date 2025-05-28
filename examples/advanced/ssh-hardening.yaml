@@ -1,0 +1,20 @@
+- name: Harden SSH
+  hosts: all
+  tasks:
+    - name: Disable root login
+      become: true
+      module: shell
+      args:
+        cmd: sed -i 's/^PermitRootLogin .*/PermitRootLogin no/' /etc/ssh/sshd_config
+
+    - name: Disable password authentication
+      become: true
+      module: shell
+      args:
+        cmd: sed -i 's/^PasswordAuthentication .*/PasswordAuthentication no/' /etc/ssh/sshd_config
+
+    - name: Restart SSH service
+      become: true
+      module: shell
+      args:
+        cmd: systemctl restart sshd

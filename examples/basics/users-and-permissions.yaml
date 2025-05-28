@@ -1,0 +1,12 @@
+- name: Create user and setup SSH dir
+  vars:
+    username: "random-username-mini-ansible"
+  tasks:
+    - name: Create a new user '{{ username }}'
+      become: true
+      module: user
+      args:
+        name: "{{ username }}"
+        shell: /bin/bash
+        create_home: true
+        system: false

@@ -1,0 +1,76 @@
+---
+- name: Deploy Simple Flask App
+  hosts: webservers
+  become: yes
+  vars:
+    app_dir: "/opt/simple-flask-app"
+    github_repo: "https://github.com/XD-DENG/flask-example.git"
+    python_packages:
+      - python3
+      - python3-pip
+      - python3-venv
+      - git
+      - python3.12-venv
+    
+  tasks:
+    - name: Update package cache
+      module: apt
+      args:
+        update_cache: true
+      when: "mini_ansible_os_family == 'Debian'"
+
+    - name: Install Python and dependencies (Debian/Ubuntu)
+      become: true
+      module: apt
+      args:
+        name: "{{ python_packages }}"
+        state: present
+
+    - name: Create application directory
+      become: true
+      module: file
+      args:
+        path: "{{ app_dir }}"
+        state: directory
+        mode: "0644"
+        owner: root
+        group: root
+
+    - name: Clone Flask application from GitHub
+      become: true
+      module: git
+      args:
+        repo: "{{ github_repo }}"
+        dest: "{{ app_dir }}"
+        version: main
+        force: true
+
+    - name: Create Python virtual environment
+      module: shell
+      become: true
+      args:
+        cmd: "python3 -m venv {{ app_dir }}/venv"
+
+    - name: Install Flask in virtual environment
+      module: pip
+      become: true
+      args:
+        name: flask
+        virtualenv: "{{ app_dir }}/venv"
+
+    - name: Create simple Flask app if not exists
+      module: file
+      become: true
+      args:
+        path: "{{ app_dir }}/app.py"
+        state: file
+        content: |
+          from flask import Flask
+          app = Flask(__name__)
+          
+          @app.route('/')
+          def hello():
+              return 'Hello from Mini Ansible!'
+          
+          if __name__ == '__main__':
+              app.run(host='0.0.0.0', port=5000)

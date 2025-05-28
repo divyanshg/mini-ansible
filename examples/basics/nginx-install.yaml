@@ -1,0 +1,21 @@
+- name: Setup a basic web server
+  tasks:
+    - name: Install nginx
+      become: true
+      module: apt
+      args:
+        name: nginx
+        state: present
+
+    - name: Start nginx service
+      become: true
+      module: service
+      args:
+        name: nginx
+        state: start
+
+    - name: Enable nginx to start on boot
+      become: true
+      module: shell
+      args:
+        cmd: systemctl enable nginx
