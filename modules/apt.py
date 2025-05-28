@@ -1,7 +1,7 @@
 from utils.sudo import sudo_wrap
 
 def run(host, user, password, args, executor, become=False):
-    """Enhanced apt module with better state handling"""
+    """apt module with state handling"""
     
     # Handle both single package and list of packages
     packages = args.get("name")
