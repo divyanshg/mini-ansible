@@ -2,7 +2,7 @@
   hosts: all
   vars:
     test_var: "hello_world"
-    install_packages: true
+    install_packages: True
     app_environment: "development"
     
   tasks:
@@ -16,19 +16,19 @@
       args:
         name: curl
         state: present
-      when: "install_packages == true"
+      when: "{{ install_packages }} == True"
 
     - name: Development environment task
       module: shell
       args:
         cmd: "echo 'Running in development mode'"
-      when: "app_environment == 'development'"
+      when: "{{app_environment}} == development"
 
     - name: Production environment task
       module: shell
       args:
         cmd: "echo 'Running in production mode'"
-      when: "app_environment == 'production'"
+      when: "{{app_environment}} == production"
 
     - name: Skip this task
       module: shell
